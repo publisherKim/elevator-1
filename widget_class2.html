@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>위젯 클래스</title>
+    <script src="./jquery/jquery3.1.0.js"></script>
+</head>
+<body>
+    <script>
+        //부모클래스
+        function Widget(width, height, position){
+            this.width = width || 50;
+            this.height = height || 50;
+            this.position = position || 'static';
+            this.$elem = null;
+        }
+        
+        Widget.prototype.render = function($where){
+            if(this.$elem){
+                this.$elem.css({
+                    width : this.width + 'px',
+                    height : this.height + 'px',
+                    position : this.position 
+                }).appendTo($where);
+            }
+        };
+        
+        function Button(width, height, position, label){
+            //super 생성자 호출
+            Widget.call(this, width, height, position);
+            this.label = label || 'Default'
+            //this.$elem = $('<button').text(this.label)
+            this.$elem = $('<button>').text(this.label)
+        }
+        
+        // Button은 Widget으로부터 상속을 받는다.
+        Button.prototype = Object.create(Widget.prototype)
+        
+        // 상속받은 render()를 오버라이드한다.
+        Button.prototype.render = function($where){
+            //super 호출
+            Widget.prototype.render.call(this, $where);       
+            this.$elem.click(this.onClick.bind(this));
+            this.$elem.mouseover(this.onMouseOver.bind(this));
+            this.$elem.mouseout(this.onMouseOut.bind(this));
+            this.$elem.dblclick(this.onDbClick.bind(this));
+
+        };
+        
+        // button 객체의 onClick 속성은 이런 함수다. 첫 작성에서 onClick을 3줄을 빼먹음.
+        Button.prototype.onClick = function(evt){
+            console.log(this.label + '버튼이 클릭됨');
+        }
+        
+        Button.prototype.onDbClick = function(evt){
+            alert(this.label + '버튼이 더블 클릭됨');
+        }
+        
+        Button.prototype.onMouseOver = function(evt){
+            this.$elem.animate({top : 200}, 1000);
+        }
+        
+        Button.prototype.onMouseOut = function(evt){
+            this.$elem.animate({top : 0}, 1000);
+        }
+
+        
+        // 사용자코드
+        var $body = $(document.body);                   
+        var btn1 = new Button(125, 30, 'relative', 'Hello');                  
+        var btn2 = new Button(150, 400, 'absolute', 'World');      
+        
+        btn1.render($body);                            
+        btn2.render($body);
+ 
+    </script>    
+</body>
+</html>

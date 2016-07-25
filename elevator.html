@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>엘레베이터 용자들이여 힘을내요!!</title>
+    <style>
+        * {margin:0; padding:0;}
+        body {height:100%;}
+        div {text-align:center; box-sizing: border-box}
+        ul {background:#ff6600; height:100%;}
+        li {list-style: none; padding:19.3px 0;}
+    </style>
+    <script src="./jquery/jquery3.1.0.js"></script>
+    <script src="js/elevator/frame.js"></script>
+</head>
+<body>
+    <script>
+        // 사용자코드
+        var $body = $(document.body);                   
+        var elevator = new Button(150, 300, 'relative', 'solid 1px #ccc', 'Elevator');                  
+        
+        elevator.render($body);                            
+        
+        
+        // source goorim
+        
+
+        var oneFloor = Number($('div').outerHeight());
+        var idx = 0;
+        var speed = 1000;
+        var arriveStage;
+        var a;
+        var time;
+        var nowStage = Number($('div').position().top)/oneFloor;
+        var deviceHeight = ($(window).height());
+        var liNum = $( "ul > li" ).length;
+        
+        // body height 엘레베이터 층수에 따라 달라짐 추후 frame으로 뺼필요 있음.
+        $('body').css('height', liNum * oneFloor);       
+        $('ul').on('click', 'li', function(e){
+            e.stopPropagation();
+            idx = Number($(this).index());
+            nowStage = Number($('div').position().top)/oneFloor;
+            arriveStage = oneFloor*idx;
+            a =  Math.abs(idx-nowStage);
+            time = Math.ceil(speed*a);
+            move();
+            return false; 
+        
+        });
+        
+        // 엘레베이터 이동
+        function move(){
+            if(nowStage === 0 || nowStage === 1  || nowStage === 2 || nowStage === 3 || nowStage === 4){
+                $('div').stop().animate({'top' : arriveStage, scrollTop : oneFloor * (nowStage-1)}, time);
+                return scrollMove();
+            }
+            
+        }
+        
+        // scroll 이동
+        function scrollMove(){
+            $('html,body').animate({ scrollTop : (300 * idx)/2 }, time);
+            return false;
+            
+        }
+
+        
+    </script>    
+</body>
+</html>

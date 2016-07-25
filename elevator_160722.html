@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>위젯 클래스</title>
+    <script src="./jquery/jquery3.1.0.js"></script>
+</head>
+<body>
+    <script>
+        //부모클래스
+        // 위젯이라는 함수는 width와 height를 파라미터로 가지고 이거의 너비는 width(받아올 수치) 또는 50이라는 고정값이다.
+        // 대문자를 쓰는 이유 여기에 세팅이 this로 추상화 되어 있음.
+        function Widget(width, height){
+            this.width = width || 50;
+            this.height = height || 50;
+            this.$elem = null;          // 정확한 의미는 아직 모르겠으나 elem 으로 추정해보면 선택자의 초기값은 null이라고 설정.
+        }
+        
+        // prototype으로 render는 함수를 만듬 무언갈 동작하게 하려고 함.
+        Widget.prototype.render = function($where){
+            if(this.$elem){     // 이것으 $elem 이라면 (정확히 무슨 의미인지 파악 불가), this.$elem이 무슨 의미인지 모름.
+                this.$elem.css({                    // this.$elem 의 css 는 아래 형태로 표현하겠다.
+                    width : this.width + 'px',   // width 라는 속성은 this.width와  + 'px'를 가진다. css를 변경하고 싶어함.
+                    height : this.height + 'px' // height...
+                }).appendTo($where);        // $where 어찌됬든 어는곳에든 부친다는 의미겠지.. 어디에 왜 모름.
+            }
+        };
+        
+        // 자식클래스 염병 부모클래스는 뭐고 자식클래는 뭐야 위에게 $elem 선택해서 뭐할거고 아래건 button 의로 뭘 할거다 이런 의미 ? 종속 개념인지도 모르겠다. 그냥 클래스 개념을 모름
+        function Button(width,height,label){
+            //super 생성자 호출 미친 슈퍼나가라
+            Widget.call(this, width, height);               // Widget이란 전역스코플에 들었겠지 이놈에 어찌됫든 this, width, height bind 했다 묶었다.  뭐 이런 개념
+            this.label = label || 'Default'                 // label 이란 새로운 놈을 변경하거나, 기본값을 가지고 싶어함 이유는 모름
+            //this.$elem = $('<button').text(this.label)    // 오류코드
+            this.$elem = $('<button>').text(this.label)     // this.$elem 은 버튼은 글자를 이놈의 라벨을 넣어줘.
+        }
+        
+        // Button은 Widget으로부터 상속을 받는다. 염병 상속 없다며 개새끼 객체간 참조 객체를 공유 내지는 레퍼런스(?)를바라보는 개념이라며
+        Button.prototype = Object.create(Widget.prototype) //객체를 생성했는데 (Widget.protype)<--- 이건 무슨 의미
+        // prototype 어찌되었든 연결이고 객체를 생성해서 Widget의 prototype을 바라본다 즉 렌더라는 속성을 같이 쓸 수 있다. 뭐 이런뜻 
+        
+        // 상속받은 render()를 오버라이드한다. 오토바이나 타라.
+        Button.prototype.render = function($where){
+            //super 호출 super 위 아래 개념인가?  슈퍼맨은 날아가니까 위 아님 말구
+            Widget.prototype.render.call(this, $where);      // 명시적으로 this와 $where(파라미터를) 묶겠다.
+            //this.$elem.click(this.onClick.bind(this));       // $elem을 클릭했을때도 이것의 onClick했을때 이것도묶겠다. 계속 묶어라 망할놈아
+            // 7. bind가 안되니까 그냥 온으로 바꺼보자 뭐 비슷한 놈이겠지. 
+            // 8. on bind도 찾을수가 없어 그럼 그 위에 onClick?
+            //this.$elem.click(this.onclick.on(this));
+            // 9. onclick이 이단 이상해 
+            //this.$elem.click(this.bind(this));              // onclick 삭제시 function오류.
+            //this.$elem.click(this.dblclick.bind(this));
+            //10. onClick을 해놓고 없었다는 거였네 그냥 단순히 따라하는것 도 못함 -_-;
+            // 5.일단 렌더는 된거야 근데 클릭에대한 bind는 typeError래 ? 
+            this.$elem.click(this.onClick.bind(this));
+        };
+        
+        // button 객체의 onClick 속성은 이런 함수다. 첫 작성에서 onClick을 3줄을 빼먹음.
+        Button.prototype.onClick = function(evt){
+            console.log(this.label + '버튼이 클릭됨');
+        }
+        
+        // 사용자코드
+        var $body = $(document.body);                   // 바디는 문서의 바디다.
+        var btn1 = new Button(125, 30, 'Hello');        // btn1 = 새 버튼이고 width125 height30 'hello'라는 라벨            
+        var btn2 = new Button(150, 400, 'World');       // 즉 로직에서 옵션처럼 만들어서 사용자 코드에서 원하는 동작 기능을 구현할수 있음.
+        
+        // 6. btn1의 주석을달면 btn2는 렌더가 되, 그렇다는건 1개는 되는데 또다른건 안되 45줄이 뭔가를 하는데 그게 안되서 두개 렌더가 안된다?
+        btn1.render($body);                             //render 라는 함수는 바디 아래에 부친다. 붙힌다. 풀발랐냐?
+        btn2.render($body);
+        //1. 제이쿼리가 없어서 첫 에러, 동작안해 쫄았네 jquery가 없어서에서 끝나라. 
+        //2. 제이쿼리를 넣어도 에러, Uncaught Error: Syntax error, unrecognized expression: <button   망할 dom에 button이 없기때문인가? 문법이 에러고 표현을 인식할수 없다 ? 표현에 응답할수없다 인가 ? 
+        //3. 이거 좋네 <button > 닫기 태그가 빠졌단 뜻이네. 멍청한놈 센스라고 없는 새끼 알려주는걸론 부족하다.
+        //4. hello버튼은 생겼는데, widget_class.html:45 Uncaught TypeError: Cannot read property 'bind' of undefined 바인드를 확인할수없다 object.prototype 탑입에 들어있는거아녀 ? 그럼 hello는 왜되 ?
+        
+        // result 주석이 훨씬 많음. writing... 이렇게 공부해도 머리속에 코드는 다 날라감. 한줄 한줄은 단순읽기는 되는데 총체적으로 구현할수 있는 능력이 없음. 문장하나는 읽어도 문단을 못만듬. 객체와 객체간의 연결은 그렇다 쳐도 
+        // 로직으로 만드는 능력, dom api등 너무 모르는게 많음 어떤 동작에대해서 일어나는 순서도 한글로 생각 못함.
+        // 재사용 가능한 코드고 뭐고 간에 1도 모름
+        /* 
+            만약 코드를 짜게 된다면 위에서부터 아래로 쭈욱 짤텐데 사고순서를
+            1. 객체에 대한 설정
+            1-1 만약 함수 스코프를 들고 시작하고 싶다면
+            전역에 
+            function name1(변하는 값1, 변하는값2, ...){
+                요놈.변하는 값1 = 변하는 값1;
+                요놈.변하는 값2 = 변하는 값2;
+                .
+                .
+                .
+                this.$elem = null; <--- 초기값 등도 세팅 가능
+            }
+            
+            2. 그다음에 name1()에 대한 속성과 값을 writing
+            name1.prototype.속성명 = function(option){
+                option을 문자열로 받고 쓸수 있음
+                // 로직
+            }
+            3. 사실 그냥 전역함수(객체?) name2 scope를 들고 있지 
+            function name2(변하는 값1, 변하는값2, 새로운 변하는 값1){
+                앞에 두개는 어떤걸 받기 위한 값
+                Widget.call(this, width, height);
+                //widget을 바라보겠다 호출하겠다. call 하겠다.
+            }
+            
+            4. name2의 프로토 타입은 객체 생성하고 위젯의 프로토 타입을 보겠다. 책에서의 표현은 위임한다. 공유한다라는 표현이 어울릴듯.
+            name2.prototype = Object.create(Widget.prototype)
+            
+            5. Button.prototype.render = function($where){
+                Widget.prototype.render.call(this, $where);     // 위젲 객체의 랜더를 콜하고 this $where를 바인드함.
+                this.$elem.click(this.onClick.bind(this));      // 그리고 button prototype 렌더 속성에 $elem 을 클릭했을때 onClick했을때 this를 바인딩함.
+            }
+            
+            6. Button.prototype.onClick = function(evt){}       // onClick 이 뭐하는 놈이지를 추가
+            
+            7. 사용자 코드이고
+            
+            6번하고 7번 사이에 3,4,5를 반복해서 계속 확장이 가능해짐.
+        */
+    </script>    
+</body>
+</html>
