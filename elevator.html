@@ -60,7 +60,11 @@
         
         // scroll 이동
         function scrollMove(){
-            $('html,body').animate({ scrollTop : (300 * idx)/2 }, time);
+            if(nowStage === 0 || nowStage === 1  || nowStage === 2){
+                $('html,body').animate({ scrollTop : (300 * idx)/2 }, time);
+            }else{
+                $('html,body').animate({ scrollTop : (300 * idx) }, time);
+            }
             return false;
             
         }

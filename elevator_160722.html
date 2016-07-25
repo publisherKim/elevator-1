@@ -95,7 +95,11 @@
             // 그냥 겐또로 /2 했는데 우연히 자연스럽게 움직임 -_-;
             console.log(idx);
             console.log(idx * 300);
-            $('html,body').animate({ scrollTop : (300 * idx)/2 }, time);
+            if(nowStage === 0 || nowStage === 1  || nowStage === 2){
+                $('html,body').animate({ scrollTop : (300 * idx)/2 }, time);
+            }else{
+                $('html,body').animate({ scrollTop : (300 * idx) }, time);
+            }
             return false;
             
         }
