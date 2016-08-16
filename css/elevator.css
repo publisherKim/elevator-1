@@ -1,0 +1,12 @@
+* {margin:0; padding:0;}
+li {list-style: none;}
+body {height:100%;}
+
+.floor_button_wrap {position:absolute; left:150px;}
+.floor_button_wrap ul li {width:60px; line-height:299px; text-align:center; border-bottom:solid 1px #ccc;}
+.people_wrap {position:absolute; right:0px; top:0;}
+
+.people_number_li {position:absolute; top:0; right:50%;}
+.people_number_li li {display:none; width:20px; height:20px; text-align:center; color:red; background:#fff; border:solid 1px #fff; border-radius:100%;}
+#elevator{position:relative; width:150px; margin-top:30px; background:#ccc;}
+.elevator{position:absolute; width: 100%; height: 300px; background: #ff6600; }

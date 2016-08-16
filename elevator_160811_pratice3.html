@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>엘레베이터 용자들이여 힘을내요!!</title>
+    <link rel="styleSheet" href="./css/elevator.css">
+    <script src="./jquery/jquery3.1.0.js"></script>
+    <script src="js/elevator.js"></script>
+
+</head>
+<body>   
+    <script>
+        $(document).ready(function(){
+            $("#elevator").elevator({
+                floorCnt : 6
+            });
+        });
+    </script>    
+    <div id="elevator"></div>
+</body>
+</html>
