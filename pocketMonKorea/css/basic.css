@@ -1,0 +1,74 @@
+@charset "UTF-8";
+/* http://서울시/관악구/관천로.com
+   v1.0 | 20160819
+   License: uk (private domain)
+   라이센스는 uk가 uk에게 부여 하였지만, 마음되로 커스터 마이징 하시고,
+   다만 상업적 용도로 사용하게 되시면... 수익을 제공해주시면 굽신굽신~
+*/
+/* basic */
+body {font-family:Dotum,'돋움',Helvetica,AppleSDGothicNeo,sans-serif; font-size:12px; line-height:160%; color:#333;}
+.wrap {width:50%; margin:0 auto;}
+a {cursor: crosshair;}
+/* intro */
+.intro_wrap {padding:5%; color:#fff; background:#000;}
+h1 {font-size:18px; margin-bottom:2%;}
+.intro_text_li {font-size:14px; margin-bottom:3%}
+
+/* btn */
+.btn_li {text-align:center; font-size:0px;}
+.btn_li li {display:inline-block; width:80%; margin-bottom:10px;}
+.btn_li li:first-child {margin-left:none;}
+.btn_li li a {display:block; padding:0 5%; text-decoration: none; font-size:12px; line-height:30px; color:#fff; background:#ff6600;}
+.btn_li li .btn_start {background:green;}
+
+/* game */
+.main_wrap {position:relative; width:100%; height:337px; margin:0 auto; background:url('../images/world_map.png') no-repeat 0 0; background-size:contain;}
+
+/* character */
+.character_wrap {height:100%;}
+.character_li > li {position:absolute; top:5px; left:100%;}
+.character_wrap ul + ul > li > a {display:block; width:100%; height:30px; line-height:30px; text-align:center;}
+.character_wrap ul + ul + ul > li > a {line-height:10px;} 
+/* click position 5대륙*/
+
+.position_li > li {position:absolute; top:20%; left:70%; width:30px; height:30px;}
+.position_li > li + li {top:50%; left:80%;}
+.position_li > li + li + li {top:55%; left:37%;}
+.position_li > li + li + li + li {top:15%; left:30%;}
+.position_li > li + li + li + li + li {top:10%; left:15%;}
+.position_li > li + li + li + li + li + li  {top:35%; left:5%;}
+
+/* 6대양 */
+.position_see_li > li  {position:absolute; width:10px; height:10px; top:38%; left:92.5%;}
+.position_see_li > li + li {top:0%; left:58%;}
+.position_see_li > li + li + li {top:50%; left:60%;}
+.position_see_li > li + li + li + li {top:85%; left:65%;}
+.position_see_li > li + li + li + li + li {top:65%; left:26%;}
+
+/* 6대양 텍스트 */
+.see_wrap {height:100%;}
+.see_wrap > ul {height:97%;}
+.see_wrap > ul > li {display:none; padding:0 5%; height:100%; background:rgba(0,0,0,0.4);}
+.see_wrap > ul > li.active {display:block; height:100%;}
+.see_wrap > ul > li > img {width:75%;}
+.see_wrap > ul > li > img, .see_wrap > ul > li > span  {display:block; padding-top:10px; color:#fff;}
+
+/* gym_wrap */
+.gym_wrap {display:none; position:absolute; top:0; width:100%; height:100%; text-align:center; background:rgba(0, 0, 0, 0.4);}
+.gym_wrap ul {position:relative; }
+.gym_wrap ul li {display:none;}
+.gym_wrap ul li.active {display:block;}
+.gym_wrap ul li.complete {display:none;}
+.gym_wrap img {display:block; margin:0 auto;}
+.gym_wrap .hint {display:none;}
+.btn_hint {display:block; width:225px; margin:0 auto; line-height:30px; text-decoration:none; color:#fff; background:#f60;}
+
+/* collect */
+.collect_wrap {}
+.collect_wrap ul {display:block; width:100%; text-align:center; min-height:60px; margin-bottom:10px;}
+.collect_wrap ul:after {claer:both; content:""; display:block;}
+.collect_wrap ul li {float:left; display:none; width:16%; min-height:60px;}
+.collect_wrap ul li.complete {display:inline-block;}
+
+.collect_wrap .collect_option_li li {width:20%;}
+.collect_wrap .collect_option_li li img {width:50%;}
