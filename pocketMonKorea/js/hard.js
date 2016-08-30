@@ -16,13 +16,13 @@
         this.nowCharacter = 1;
         
         this.init();
-        //this.initEvent();
-    };
+        this.initEvent();
+    }
     
     Pocketmon.prototype.init = function(){
         this.mainWrap();
         this.collectWrap();
-    };
+    }
     
     // collectWrap start
     Pocketmon.prototype.collectWrap = function(){
@@ -31,11 +31,12 @@
         
         this.collectPocketLi($collectWrap);
         this.collectOptionLi($collectWrap);
-    };
+    }
     
     Pocketmon.prototype.collectPocketLi = function($collectWrap){
         var $collectPocketLi = $('<ul class="collect_pocket_li">');
         var $collectPocketList = $('<li>');
+        // img list 012345순차적으로 어떻게 돌릴것이냐..
         var $collectPocketImg = $('<img src="images/pocket1.png" alt="포케몬캐릭터">');
         var $collectPocketListTotal = $collectPocketList.append($collectPocketImg);
         for(var i = 0; i < this.options.positionListCnt; i++){
@@ -44,7 +45,7 @@
         }
 
         $collectWrap.append($collectPocketLi);        
-    };
+    }
 
     Pocketmon.prototype.collectOptionLi = function($collectWrap){
         var $collectOptionLi = $('<ul class="collect_option_li">');
@@ -57,7 +58,7 @@
         }
 
         $collectWrap.append($collectOptionLi);        
-    };    
+    }   
     // collectWrap end
     // mainWrap start
     Pocketmon.prototype.mainWrap = function(){
@@ -71,7 +72,7 @@
         this.positionSeeLi($characterWrap);
         this.gymWrap($characterWrap);
         this.seeWrap($characterWrap);
-    };
+    }
     
     Pocketmon.prototype.chracterLi = function($characterWrap){
         var $characterLi = $('<ul class="character_li">');
@@ -85,7 +86,7 @@
         // 조잡이 나온다... 응용력 0점... 동적으로 src경로랑 alt 바꾸기 캐릭터 li class도...강제로도 바꿀수 있겠지만... 모르겠다.
         // if else... 쓰면 백퍼 되는데 구려!!
         $characterWrap.append($characterLi);
-    };
+    }
     
     Pocketmon.prototype.positionLi = function($characterWrap){
         var $positionLi = $('<ul class="position_li">');
@@ -107,7 +108,7 @@
         }
 
         $characterWrap.append($positionSeeLi);
-    };
+    }
     
     Pocketmon.prototype.seeWrap = function($characterWrap){
         var $seeWrap = $('<div class="see_wrap">');
@@ -148,9 +149,83 @@
         
         $gymWrap.append($gymLi);
         $characterWrap.append($gymWrap);
-    };
+    }
     //mainWrap end
     
+    //event start
+    Pocketmon.prototype.initEvent = function(){
+        this.bindingButtonGymMission();
+    }
+    
+    Pocketmon.prototype.bindingButtonGymMission = function(){
+        var that = this;
+        $(this.wrap).find('.position_li > li').off('click').on('click', function(){
+            var position = $(this).position();
+            var positionIdx = $(this).index();
+            $(that.wrap).find('.character_li > li').animate({'top' : position.top, 'left' : position.left}, 2000, function(){
+               that.gymMission(positionIdx); 
+            });
+        });   
+    }
+    
+    Pocketmon.prototype.gymMission = function(positionIdx){
+        var that = this;
+        $(this.wrap).find('.gym_wrap').css('display', 'block');
+        $(this.wrap).find('.gym_wrap > ul > li').eq(positionIdx).addClass('active');
+        $(this.wrap).find('.btn_hint').off('click').on('click', function(){
+            that.hint();
+        });
+        
+        this.gymSolution(positionIdx);        
+    }
+    
+    Pocketmon.prototype.hint = function(){
+        $(this.wrap).find('.hint').toggle();
+    }
+    
+    Pocketmon.prototype.gymSolution = function(positionIdx){
+        var that = this;
+        if(positionIdx == 0){
+            var keyValue = [67,76,73,67,75,66];
+            var step = 0;
+            document.addEventListener('keyup', function(e){
+                if(e.which === keyValue[step]){
+                    step +=1;
+                }else{
+                    step = 0;
+                }
+                if(step == keyValue.length){
+                    that.gymComplete(positionIdx);
+                    return step=0;	
+                }		
+            });             
+        }else if(positionIdx == 1){
+            var keyValue = [38,40,38,38,40];
+            var step = 0;
+            document.addEventListener('keyup', function(e){
+                if(e.which === keyValue[step]){
+                    step +=1;
+                }else{
+                    step = 0;
+                }
+                if(step == keyValue.length){
+                    that.gymComplete(positionIdx);
+                    return step=0;	
+                }		
+            });   
+        }        
+    }
+    
+    Pocketmon.prototype.gymComplete = function(positionIdx){
+        alert('complete');
+        console.log($(this.wrap));
+        $(this.wrap).find('.gym_wrap > ul > li').eq(positionIdx).removeClass('active').addClass('complete');
+        $(this.wrap).find('.gym_wrap').css('display', 'none');
+        $(this.wrap).find('.collect_pocket_li > li').eq(positionIdx).addClass('complete');        
+    }
+    //event end
+    
+    //flugin 
     $.fn.Pocketmon = function(userOptions){
         var dftOptions = {
             // 대륙과 바다에 대한 변수명 좀더 적합한 요소를 찾을 필요 있음.
