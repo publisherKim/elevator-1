@@ -155,6 +155,7 @@
     //event start
     Pocketmon.prototype.initEvent = function(){
         this.bindingButtonGymMission();
+        this.bindingButtonFiveOcean();
     }
     
     Pocketmon.prototype.bindingButtonGymMission = function(){
@@ -222,6 +223,24 @@
         $(this.wrap).find('.gym_wrap > ul > li').eq(positionIdx).removeClass('active').addClass('complete');
         $(this.wrap).find('.gym_wrap').css('display', 'none');
         $(this.wrap).find('.collect_pocket_li > li').eq(positionIdx).addClass('complete');        
+    }
+    
+    Pocketmon.prototype.bindingButtonFiveOcean = function(){
+        var that = this;
+        $(this.wrap).find('.position_see_li > li').off('mouseenter').on('mouseenter', function(){
+            var idx = $(this).index();
+            var optionName = ['Neo~', 'Tube!!', 'GaeDdong2', 'Moozi', 'Peach'];
+            if(!$(that.wrap).find('.collect_option_li > li').eq(idx).hasClass('complete')){
+                $(that.wrap).find('.see_wrap li').eq(idx).fadeIn(500);
+                console.log(idx);
+                alert('숨겨진 캐릭터를 발견하였당!!! 축하축하 \n' + optionName[idx] + '획득하였습니다.');           
+            }
+            $(that.wrap).find('.collect_option_li > li').eq(idx).addClass('complete');            
+        });
+        
+        $(this.wrap).find('.see_wrap li').off('mouseleave').on('mouseleave', function(){
+            $(this).fadeOut();
+        });        
     }
     //event end
     
