@@ -1,0 +1,256 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<title></title>
+
+	<style>
+		.tab-menu {
+			list-style: none;
+			height:80px;
+		}
+
+		.tab-menu li {
+			width:99px;
+			height:40px;
+			background:orange;
+			text-align:center;
+			overflow: hidden;
+			display: inline-block;
+			float:left;
+            color:black;
+		}
+		.tab-menu li:hover {
+			background: green;
+		}
+		.tab-menu li.select {
+            color:white;
+			background: black;
+			height:80px;
+		}
+	</style>
+
+    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+    <script>
+		/*
+		 미션 03 탭메뉴 선택처리를 콜백 함수로 받기
+		 미션 02에서 작성한 탭메뉴 소스 코드를 수정해 선택한
+		 탭메뉴 인덱스 정보를 #info 영역에 출력해 주세요.
+		 단, 가능하면 탭메뉴 로직 구현 부분과 추가 기능인 로직 처리 부분을 분리해서 작업할 수 있게 만들어주세요.
+		 */
+		$(document).ready(function(){
+			// 탭메뉴 코드가 동작할 수 있도록 tabMenu() 함수 호출
+			$("#tabMenu1").tabmenu({});
+			//app.sf.setting("#tabMenu1", onSelectItem);
+			//new TabMenu("#tabMenu1", onSelectItem);
+			//o.tabMenu("#tabMenu1", onSelectItem);
+		});
+
+		// plugin...
+		(function($){
+
+
+			function TabMenu(selector, options){
+				this.$tabMenu = null;
+				this.$menuItems = null;
+				// 선택한 탭메뉴를 저장할 변수
+				this.$selectMenuItem = null;
+				if (selector)
+				{
+					this.setting(selector, options);
+				}
+			}
+			TabMenu.prototype.setting = function(selector, options){
+				this.callback = options.deco.draw;
+				this.init(selector);
+				this.initEvent();
+			};
+			TabMenu.prototype.init = function(selector){
+				this.$tabMenu = $(selector);
+				this.$menuItems = this.$tabMenu.find("li");
+			};
+			TabMenu.prototype.initEvent = function (){
+				var that = this;
+				this.$menuItems.click(function(){
+					that.setSelectItem($(this));
+				});
+			};
+			TabMenu.prototype.setSelectItem = function ($item){
+				if(this.$selectMenuItem){
+					this.$selectMenuItem.removeClass("select");
+				}
+				this.$selectMenuItem = $item;
+				this.$selectMenuItem.addClass("select");
+
+				var deco = $item.data("dec");
+				
+				//선택 콜백 함수 실행
+				if(window[deco].draw!= null)
+				window[deco].draw(this.$selectMenuItem.index());
+			};
+
+
+			$.fn.tabmenu = function(userOptions){
+				var dftOptions = {
+					onSelectItem : function(){},
+					deco : Deco1
+				};
+				var settings = $.extend({},dftOptions, userOptions);
+
+				return this.each(function(){
+					new TabMenu().setting(this, settings);
+				});
+			};
+		})(jQuery);
+
+		// self function
+		var app = {};
+		(function(app){
+			function TabMenu(selector, callback){
+				this.$tabMenu = null;
+				this.$menuItems = null;
+				// 선택한 탭메뉴를 저장할 변수
+				this.$selectMenuItem = null;
+				if(selector){
+					this.setting(selector, callback);
+				}
+			}
+			TabMenu.prototype.setting = function(selector, callback){
+				this.callback = callback;
+				this.init(selector);
+				this.initEvent();
+			};
+			TabMenu.prototype.init = function(selector){
+				this.$tabMenu = $(selector);
+				this.$menuItems = this.$tabMenu.find("li");
+			};
+			TabMenu.prototype.initEvent = function (){
+				var that = this;
+				this.$menuItems.click(function(){
+					that.setSelectItem($(this));
+				});
+			};
+			TabMenu.prototype.setSelectItem = function ($item){
+				if(this.$selectMenuItem){
+					this.$selectMenuItem.removeClass("select");
+				}
+				this.$selectMenuItem = $item;
+				this.$selectMenuItem.addClass("select");
+
+
+				//선택 콜백 함수 실행
+				if(this.callback!= null)
+				this.callback(this.$selectMenuItem.index());
+			};
+
+			app.sf = new TabMenu();
+		})(app);
+
+		// case 3
+		function TabMenu(selector, callback){
+			this.$tabMenu = null;
+			this.$menuItems = null;
+			// 선택한 탭메뉴를 저장할 변수
+			this.$selectMenuItem = null;
+			this.callback = callback;
+			this.init(selector);
+			this.initEvent();
+		}
+		TabMenu.prototype.init = function(selector){
+			this.$tabMenu = $(selector);
+			this.$menuItems = this.$tabMenu.find("li");
+		};
+		TabMenu.prototype.initEvent = function (){
+			var that = this;
+			this.$menuItems.click(function(){
+				that.setSelectItem($(this));
+			});
+		};
+		TabMenu.prototype.setSelectItem = function ($item){
+			if(this.$selectMenuItem){
+				this.$selectMenuItem.removeClass("select");
+			}
+			this.$selectMenuItem = $item;
+			this.$selectMenuItem.addClass("select");
+
+
+			//선택 콜백 함수 실행
+			if(this.callback!= null)
+			this.callback(this.$selectMenuItem.index());
+		};
+
+
+		// case 1
+		var o = {
+			$tabMenu : null,
+			$menuItems : null,
+			// 선택한 탭메뉴를 저장할 변수
+			$selectMenuItem : null,
+			tabMenu : function (selector, callback){
+				this.callback = callback;
+				this.init(selector);
+				this.initEvent();
+			},
+			init : function (selector){
+				this.$tabMenu = $(selector);
+				this.$menuItems = this.$tabMenu.find("li");
+			},
+			initEvent : function (){
+				var that = this;
+				this.$menuItems.click(function(){
+					that.setSelectItem($(this));
+				});
+			},
+			setSelectItem : function ($item){
+				if(this.$selectMenuItem){
+					this.$selectMenuItem.removeClass("select");
+				}
+				this.$selectMenuItem = $item;
+				this.$selectMenuItem.addClass("select");
+
+
+				//선택 콜백 함수 실행
+				if(this.callback!= null)
+				this.callback(this.$selectMenuItem.index());
+			}
+		};
+
+		// 선택 처리
+		function onSelectItem(index){
+    		$("#info").html(index);
+		}
+
+		var Deco1 = {
+			draw : function(index){
+				$("#info").html(index);
+			}
+		};
+		var Deco2 = {
+			draw : function(index){
+				$("#info").html("("+index+")");
+			}
+		}
+		var Deco3 = {
+			draw : function(index){
+				$("#info").html("***" + index + "***");
+			}
+		}
+	</script>
+
+
+</head>
+
+<body>
+
+	<ul class="tab-menu" id="tabMenu1">
+		<li class="menuitem1" data-dec="Deco1">google</li>
+		<li class="menuitem2" data-dec="Deco2">facebook</li>
+		<li class="menuitem3" data-dec="Deco3">pinterest</li>
+		<li class="menuitem4" data-dec="Deco1">twitter</li>
+		<li class="menuitem5" data-dec="Deco2">airbnb</li>
+		<li class="menuitem6" data-dec="Deco3">path</li>
+	</ul>
+	<div>선택한 인덱스 값 : <span id="info"></span></div>
+
+</body>
+</html>
