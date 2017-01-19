@@ -43,7 +43,7 @@ var vendingAction = {
     },
     doorClose : function(password){
         this.powerError();
-        this.passwordError();
+        this.passwordError(password);
         return this.door = false;        
     },   
     insertMoney : function(money){
@@ -76,10 +76,10 @@ var vendingAction = {
         // 잔돈이 머니 박스의 금액보다 클수가 없다....
         //if(this.moneyBox < this.change) return '관리자에게 문의하세요.';
         this.moneyBox -= this.insert;
-        this.change = this.insert;
+        var userChange = this.change = this.insert;
         this.insert = 0;
-        console.log(this.change);
         this.change = 0;
+        return userChange;
     },
     setBeverage : function( obj ){
         this.powerError();
