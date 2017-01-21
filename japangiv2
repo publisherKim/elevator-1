@@ -1,0 +1,110 @@
+function vendingMachine( products, moneyBox ){
+    this.power = true;
+    this.moneyBox = moneyBox || 10000;
+    this.insert = 0;
+    this.change = 0;
+    this.door = false;
+    this.products = products;
+}
+
+vendingMachine.prototype = vendingAction;
+
+var vendingAction = {
+    on : function(){
+        this.power = true;
+        return '자판기가 작동합니다.'
+    },
+    off : function(){
+        this.power = false;
+        return '자판기 작동이 종료합니다.'
+    },
+    insertMoney : function(money){
+        if(!this.power) throw new Error('power on!!');
+        this.moneyBox += money;
+        this.insert += money;
+        return '투입금액 : ' + money;
+    },
+    getBeverage : function ( name, quantites ){
+        quantites = quantites || 1;
+        if(!this.power) throw new Error('power on!!');
+        if(this.insert === 0) throw new Error('insert coin!!');
+        for(var i = 0, max = this.products.length; i < max; i++){
+            if( this.products[i].kind ===  name ){
+                if(this.products[i].quantity < quantites){return '수량이 부족합니다.'}
+                var salePrices = this.products[i].price * quantites;
+                if( salePrices <= this.insert ){
+                    this.insert -= salePrices;
+                    this.moneyBox -= salePrices;
+                    return name + ' ' + quantites + '개, 남은 금액 : ' + this.insert;
+                }
+                return '금액이 부족합니다. 남은 금액 : ' + this.insert;
+            }
+        }
+    },
+    changeMoney : function(){
+        if(!this.power) throw new Error('power on!!');
+        // 잔돈이 머니 박스의 금액보다 클수가 없다....
+        //if(this.moneyBox < this.change) return '관리자에게 문의하세요.';
+        this.moneyBox -= this.insert;
+        this.change = this.insert;
+        this.insert = 0;
+        return this.change;
+    },
+    doorOpen : function(password){
+        if(!this.power) throw new Error('power on!!');
+        if( password !== 1234){
+            alert('who are u?') 
+            return this.off();
+        }
+        return this.door = true;
+    },
+    doorClose : function(password){
+        if(!this.power) throw new Error('power on!!');
+        if( password !== 1234){
+            alert('who are u?') 
+            return this.off();
+        }
+        return this.door = false;        
+    },
+    setBeverage : function( obj ){
+        if(!this.power) throw new Error('power on!!');
+        if(!this.door) throw new Error('도둑놈아!!');
+        if(typeof arguments[0] === 'string'){
+            arguments[1] = arguments[1] || 100;
+            for(var i = 0, max = this.products.length; i < max; i++){
+                if(this.products[i].kind === arguments[0]){
+                    this.products[i].kind = arguments[0]
+                    this.products[i].quantity += arguments[1];
+                    this.products[i].price = arguments[2];
+                }
+            }            
+        }
+        if(typeof obj === 'object'){
+            for(var i = 0, max = obj.length; i < max; i++){
+                if(this.products[i].kind === obj[i].kind){
+                    this.products[i].kind = obj[i].kind;
+                    this.products[i].quantity += obj[i].quantity;
+                    this.products[i].price = obj[i].price;
+                }
+            }
+        }
+
+        return '비밀번호를 입력하여 문을 잠궈수에요!!';
+    },
+    setMoneyBox : function(money){
+        if(!this.power) throw new Error('power on!!');
+        if(!this.door) throw new Error('도둑놈아!!');
+        this.moneyBox += money;
+        return '돈통에 총 금액은' + this.moneyBox + '원 입니다. 비밀번호를 입력하여 문을 잠궈주세요';
+    },
+    guide : function(){
+        if(!this.power) throw new Error('power on!!');
+        return v1;
+    }
+}
+
+var v1 = new vendingMachine([
+    {kind : 'coke', quantity : 100, price : 500},
+    {kind : 'cyder', quantity : 100, price : 600},
+    {kind : 'fanta', quantity : 100, price : 700},
+], 20000);
